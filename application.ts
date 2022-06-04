@@ -1,6 +1,6 @@
 import { Application } from "express";
 import express = require("express");
-var cors = require('cors')
+var cors = require('cors');
 
 /**
  * Primary Class that constructs all of the parts of the Express server
@@ -30,9 +30,7 @@ export class App {
         this.app.use(express.urlencoded());
         this.app.use(cors());
         this.app.use('/public', express.static('public'))
-        // mware.forEach((m) => {
-        //     this.app.use(m);
-        // });
+        this.app.use('/', express.static('/var/www/html/public/angular/'));
     }
 
     public addMiddleWare(middleWare: any) {
@@ -44,6 +42,12 @@ export class App {
      * @param routes Array of router objects to be attached to the app
      */
     private routes(routes: Array<express.Router>) {
+
+        //Route pour avoir accès a angular 
+        this.app.get('*', (req ,res) => {
+            res.sendFile('index.html', {root : '/var/www/html/public/angular/' });
+         });
+
         routes.forEach((r) => {
             this.app.use(`/api`, r);
         });
@@ -55,27 +59,6 @@ export class App {
     private assets(path: string) {
         this.app.use(express.static(path));
     }
-
-    /**
-     * Creates a connection to a MongoDB instance using mongoose
-     * @param uri MongoDB connection string
-     */
-    // public mongoDB(uri: string) {
-    //     const connect = () => {
-    //         mongoose
-    //             .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    //             .then(() => {
-    //                 return;
-    //             })
-    //             .catch((error) => {
-    //                 console.log("DATABASE CONNECTION FAILED \n", error);
-    //                 return process.exit(1);
-    //             });
-    //     };
-    //     connect();
-
-    //     mongoose.connection.on("disconnected", connect);
-    // }
 
     /**
      * Start the Express app

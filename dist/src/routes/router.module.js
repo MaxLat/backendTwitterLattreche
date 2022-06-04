@@ -29,10 +29,10 @@ function passportCb(req, res, next) {
     };
 }
 // Multer File upload settings
-const DIR = "./public/";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, DIR);
+        const dir = "./public/";
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         const fileName = file.originalname.toLowerCase().split(" ").join("-");
@@ -57,22 +57,14 @@ var upload = multer({
         }
     },
 });
-const base = "/test";
 const auth = new auth_1.AuthService();
 passport.use(auth.authenticateUser());
 passport.use(auth.authorizeUser());
-//Routes
-// routerTemplate.post(`${base}`, (req, res) => { exampleController.createFunction(req,res)})
-// routerTemplate.put(`${base}/:id`, (req, res) => { exampleController.putFunction(req, res) })
-// routerTemplate.delete(`${base}/:id`, (req, res) => { exampleController.deleteById(res, req.params.id)})
 exports.routerTemplate.post("/signup", (req, res) => {
     controllers_module_1.userController.createUser(req, res);
 });
 exports.routerTemplate.post("/signin", (req, res, next) => passport.authenticate("local", { session: false }, passportCb(req, res, next))(req, res, next), (req, res) => {
     controllers_module_1.userController.getUser(req, res);
-});
-exports.routerTemplate.get(`${base}/token`, passport.authenticate("jwt", { session: false }), (req, res) => {
-    controllers_module_1.userController.testToken(req, res);
 });
 exports.routerTemplate.get("/getalluser", passport.authenticate("jwt", { session: false }), (req, res) => {
     controllers_module_1.userController.getAllUser(req, res);

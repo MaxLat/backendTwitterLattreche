@@ -3,7 +3,6 @@ import express = require("express");
 export const routerTemplate = express.Router();
 import passport = require("passport");
 import { NextFunction, Response } from "express";
-
 //controllers
 
 import {
@@ -37,10 +36,11 @@ function passportCb(req: any, res: Response, next: NextFunction) {
 }
 
 // Multer File upload settings
-const DIR = "./public/";
+
 const storage = multer.diskStorage({
   destination: (req : Request, file : any, cb : Function) => {
-    cb(null, DIR);
+    const dir = "./public/";
+    cb(null, dir);
   },
   filename: (req : Request, file : any, cb: Function) => {
     const fileName = file.originalname.toLowerCase().split(" ").join("-");
@@ -68,15 +68,11 @@ var upload = multer({
   },
 });
 
-const base = "/test";
+
 const auth = new AuthService();
 passport.use(auth.authenticateUser());
 passport.use(auth.authorizeUser());
 
-//Routes
-// routerTemplate.post(`${base}`, (req, res) => { exampleController.createFunction(req,res)})
-// routerTemplate.put(`${base}/:id`, (req, res) => { exampleController.putFunction(req, res) })
-// routerTemplate.delete(`${base}/:id`, (req, res) => { exampleController.deleteById(res, req.params.id)})
 routerTemplate.post("/signup", (req, res) => {
   userController.createUser(req, res);
 });
@@ -90,13 +86,6 @@ routerTemplate.post(
     )(req, res, next),
   (req, res) => {
     userController.getUser(req, res);
-  }
-);
-routerTemplate.get(
-  `${base}/token`,
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    userController.testToken(req, res);
   }
 );
 routerTemplate.get(

@@ -11,7 +11,6 @@ const dbConnection_1 = require("./src/services/dbConnection");
 const post_model_1 = __importDefault(require("./src/models/post.model"));
 require('dotenv').config();
 const port = process.env.PORT ? +process.env.PORT : 8080;
-let dbConString;
 async function dbStart() {
     try {
         await dbConnection_1.sequelize.authenticate();
@@ -34,12 +33,6 @@ async function startApp() {
     );
     app.listen();
 }
-/**
- * Connect to MongoDB
- */
-// dbConString
-//   ? app.mongoDB(dbConString)
-//   : console.log("Not Starting MongoDB Connection");
 /**
  * Launch!
  */

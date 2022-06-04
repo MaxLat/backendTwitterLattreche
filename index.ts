@@ -8,7 +8,6 @@ import Post from "./src/models/post.model";
 require('dotenv').config();
 
 const port: number = process.env.PORT ? +process.env.PORT : 8080;
-let dbConString;
 
 async function dbStart() {
   try {
@@ -35,13 +34,6 @@ async function startApp() {
 
   app.listen();
 }
-
-/**
- * Connect to MongoDB
- */
-// dbConString
-//   ? app.mongoDB(dbConString)
-//   : console.log("Not Starting MongoDB Connection");
 
 /**
  * Launch!
