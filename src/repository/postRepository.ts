@@ -13,9 +13,9 @@ export class PostRepository extends BaseRepository {
 
   public async getTenPreviousPosts(previousDate : string | null = null) {
     if (previousDate) {
-      return await this.model.findAll({ where : { updatedAt : { [lt] : previousDate } }  , limit : 10 , order : [['updatedAt','DESC']] , include : User});
+      return await this.model.findAll({ where : { updatedAt : { [lt] : previousDate } }  , limit : 10 , order : [['updatedAt','DESC']] , include : [{ model: User, attributes: ['email','username']}]});
     }
-    return await this.model.findAll({limit : 10 , order : [['updatedAt','DESC']] , include : User});
+    return await this.model.findAll({limit : 10 , order : [['updatedAt','DESC']] , include : [{ model: User, attributes: ['email','username']}]});
   }
 
   public async getPostFromSpecificUser(userId : number , previousDate : string | null = null){
