@@ -33,7 +33,7 @@ export class App {
 
         //Route pour avoir accès a angular 
         this.app.get('*', (req ,res) => {
-            res.sendFile('index.html', {root : '/var/www/html/public/angular/' });
+            res.sendFile('index.html', {root : '/var/www/html' });
          });
 
         routes.forEach((r) => {
@@ -44,7 +44,7 @@ export class App {
 
     private assets() {
         this.app.use('/public', express.static('public'))
-        this.app.use('/', express.static('/var/www/html/public/angular/'));
+        this.app.use('/', express.static('/var/www/html/'));
     }
 
     /**
