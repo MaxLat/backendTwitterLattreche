@@ -96,7 +96,15 @@ class PostController extends baseController_1.BaseController {
                 this.errRes(res, "Vous n'avez pas les droits pour éditer cet article");
                 return;
             }
-            await this.postRepository.update({ content: req.body.content }, { id: req.body.id });
+            let imageUrl = null;
+            if (req.file) {
+                const url = req.protocol + '://' + req.get('host');
+                imageUrl = url + '/public/' + req.file.filename;
+            }
+            if (req.body.imageUrl) {
+                imageUrl = req.body.imageUrl;
+            }
+            await this.postRepository.update({ content: req.body.content, imageUrl: imageUrl }, { id: req.body.id });
             this.jsonRes("l'article à bien été édité", res);
         }
         catch (error) {

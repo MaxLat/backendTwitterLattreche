@@ -10,10 +10,7 @@ import {
 import { sequelize } from "../services/dbConnection";
 import User from "./user.model";
 
-// order of InferAttributes & InferCreationAttributes is important.
 class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
-  // 'CreationOptional' is a special type that marks the field as optional
-  // when creating an instance of the model (such as using Model.create()).
   declare id: CreationOptional<number>;
   declare content: string;
   declare ownerId: ForeignKey<User['id']>;
@@ -30,7 +27,7 @@ Post.init(
       autoIncrement: true,
     },
     content: {
-      type: DataTypes.STRING(280),
+      type: DataTypes.STRING(),
       allowNull: false,
     },
     isEditable: {

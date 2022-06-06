@@ -1,6 +1,3 @@
-import User from "../models/user.model";
-// Cette import est juste pour recuperer les méthodes
-
 export abstract class BaseRepository {
   // le model devrait être de type ModelCtor, mais sequelize-typescript n'est pas encore à jour.... (src : slack de sequelize 30/05/2022 )
   constructor(protected model: any) {}

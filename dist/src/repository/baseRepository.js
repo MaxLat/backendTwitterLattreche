@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseRepository = void 0;
-// Cette import est juste pour recuperer les méthodes
 class BaseRepository {
     model;
     // le model devrait être de type ModelCtor, mais sequelize-typescript n'est pas encore à jour.... (src : slack de sequelize 30/05/2022 )

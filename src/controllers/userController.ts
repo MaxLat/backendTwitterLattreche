@@ -1,6 +1,7 @@
 import { BaseController } from "./baseController";
 import { Response, Request, NextFunction } from "express";
 import { UserRepository } from "../repository/userRepository";
+const {ValidationError} = require('sequelize');
 
 export class UserController extends BaseController {
   userRepository = new UserRepository();
@@ -17,6 +18,7 @@ export class UserController extends BaseController {
       });
       this.jsonRes(user, res);
     } catch (error: any) {
+
       if (error.name === "SequelizeUniqueConstraintError") {
         if (error.errors[0].message === "email must be unique") {
           this.errRes(res, "cette adresse mail est déja utilisée", 409);
@@ -28,6 +30,12 @@ export class UserController extends BaseController {
 
         return;
       }
+
+      if(error instanceof ValidationError ){
+        this.errRes(res, error.errors[0].message,409);
+        return
+      }
+
       this.errRes(res, "une erreur est survenue");
     }
   }

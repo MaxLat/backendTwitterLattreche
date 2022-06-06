@@ -1,34 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.routerTemplate = void 0;
-//express imports
 const express = require("express");
 exports.routerTemplate = express.Router();
 const passport = require("passport");
-//controllers
 const controllers_module_1 = require("../controllers/controllers.module");
 const auth_1 = require("../services/auth");
 const multer = require("multer");
 function passportCb(req, res, next) {
     return (error, user) => {
-        //Wrap errors in not authenticated error
         if (error) {
             return res
                 .status(500)
                 .json({ error: "Une erreur est survenue lors du login" });
         }
-        //No user found?
         if (!user) {
             return res
                 .status(500)
                 .json({ error: "Utilisateur ou mot de passe incorrect" });
         }
-        //Set user in request
         req.user = user;
         next();
     };
 }
-// Multer File upload settings
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const dir = "./public/";
@@ -39,7 +33,6 @@ const storage = multer.diskStorage({
         cb(null, fileName);
     },
 });
-// Multer Mime Type Validation
 var upload = multer({
     storage: storage,
     limits: {
@@ -84,6 +77,6 @@ exports.routerTemplate.post("/getpostsfromspecificuser", passport.authenticate("
 exports.routerTemplate.delete("/deletepost/:id", passport.authenticate("jwt", { session: false }), (req, res) => {
     controllers_module_1.postController.deletePost(req, res);
 });
-exports.routerTemplate.put("/updatepost", passport.authenticate("jwt", { session: false }), (req, res) => {
+exports.routerTemplate.put("/updatepost", passport.authenticate("jwt", { session: false }), upload.single('img'), (req, res) => {
     controllers_module_1.postController.updatePost(req, res);
 });

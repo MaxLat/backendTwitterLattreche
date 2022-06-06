@@ -2,9 +2,7 @@ import { Application } from "express";
 import express = require("express");
 var cors = require('cors');
 
-/**
- * Primary Class that constructs all of the parts of the Express server
- */
+
 export class App {
     public app: Application;
 
@@ -12,36 +10,22 @@ export class App {
     constructor(
         private port: number,
         routes: Array<express.Router>,
-        middleware = []
     ) {
-        //* Create a new express app
         this.app = express();
-        this.middleware(middleware);
+        this.middleware();
         this.routes(routes);
-
-        //this.assets(this.staticPath);
+        this.assets();
     }
 
-    /**
-     * @param mware Array of middlewares to be loaded into express app
-     */
-    private middleware(mware: any[]) {
+
+    private middleware() {
         this.app.use(express.json());
         this.app.use(express.urlencoded());
         this.app.use(cors());
-        this.app.use('/public', express.static('public'))
-        this.app.use('/', express.static('/var/www/html/public/angular/'));
+        
     }
 
-    public addMiddleWare(middleWare: any) {
-        this.app.use(middleWare);
-    }
-
-    /**
-     * Attaches route objects to app, appending routes to `apiPath`
-     * @param routes Array of router objects to be attached to the app
-     */
-    private routes(routes: Array<express.Router>) {
+    private routes(routes: Array<express.Router>) : void {
 
         //Route pour avoir accès a angular 
         this.app.get('*', (req ,res) => {
@@ -53,16 +37,13 @@ export class App {
         });
     }
 
-    /**
-     * Enable express to serve up static assets
-     */
-    private assets(path: string) {
-        this.app.use(express.static(path));
+
+    private assets() {
+        this.app.use('/public', express.static('public'))
+        this.app.use('/', express.static('/var/www/html/public/angular/'));
     }
 
-    /**
-     * Start the Express app
-     */
+   
     public listen() {
         this.app.listen(this.port, () => {
             console.log("APP LISTENING ON PORT:", this.port);

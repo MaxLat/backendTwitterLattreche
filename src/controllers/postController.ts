@@ -16,7 +16,7 @@ export class PostController extends BaseController {
     try {
       const user: any = req.user;
       const userId = user.id;
-      const url = req.protocol + '://' + req.get('host')
+      const url = req.protocol + '://' + req.get('host');
       const post = {
         content: req.body.content,
         ownerId: userId,
@@ -91,7 +91,7 @@ export class PostController extends BaseController {
 
   }
 
-  public async updatePost(req : Request , res : Response) {
+  public async updatePost(req : any , res : Response) {
 
     try {
       const userFromToken: any = req.user;
@@ -106,7 +106,18 @@ export class PostController extends BaseController {
         return;
       }
 
-      await this.postRepository.update({content : req.body.content},{id : req.body.id});
+      let imageUrl = null;
+      if(req.file){
+
+        const url = req.protocol + '://' + req.get('host');
+        imageUrl =  url + '/public/' + req.file.filename;
+      }
+
+      if(req.body.imageUrl){
+        imageUrl = req.body.imageUrl
+      }
+ 
+      await this.postRepository.update({content : req.body.content , imageUrl: imageUrl},{id : req.body.id});
       this.jsonRes("l'article à bien été édité", res);
     } catch (error: any) {
       console.log(error);

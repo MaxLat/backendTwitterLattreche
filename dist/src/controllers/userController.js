@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const baseController_1 = require("./baseController");
 const userRepository_1 = require("../repository/userRepository");
+const { ValidationError } = require('sequelize');
 class UserController extends baseController_1.BaseController {
     userRepository = new userRepository_1.UserRepository();
     constructor() {
@@ -25,6 +26,10 @@ class UserController extends baseController_1.BaseController {
                 if (error.errors[0].message === "username must be unique") {
                     this.errRes(res, "ce nom d'utilisateur est déja utilisé", 409);
                 }
+                return;
+            }
+            if (error instanceof ValidationError) {
+                this.errRes(res, error.errors[0].message, 409);
                 return;
             }
             this.errRes(res, "une erreur est survenue");

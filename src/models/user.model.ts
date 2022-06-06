@@ -21,10 +21,7 @@ import { sequelize } from "../services/dbConnection";
 import bcrypt from "bcrypt";
 import Post from "./post.model";
 
-// order of InferAttributes & InferCreationAttributes is important.
 class User extends Model<InferAttributes<User , {omit : 'posts'}>, InferCreationAttributes<User, { omit: 'posts' }>> {
-  // 'CreationOptional' is a special type that marks the field as optional
-  // when creating an instance of the model (such as using Model.create()).
   declare id: CreationOptional<number>;
   declare email: string;
   declare password: string;
@@ -32,7 +29,7 @@ class User extends Model<InferAttributes<User , {omit : 'posts'}>, InferCreation
   declare token: CreationOptional<string>;
   declare posts?: NonAttribute<Post[]>;
 
-  declare getProjects: HasManyGetAssociationsMixin<Post>; // Note the null assertions!
+  declare getProjects: HasManyGetAssociationsMixin<Post>;
   declare addPost: HasManyAddAssociationMixin<Post, number>;
   declare addPosts: HasManyAddAssociationsMixin<Post, number>;
   declare setPosts: HasManySetAssociationsMixin<Post, number>;
@@ -59,7 +56,10 @@ User.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: "cette email est déja utilisée"
+      unique: "cette email est déja utilisée",
+      validate : {
+        isEmail : { msg : 'Veuillez rentrer une adresse email valide'}
+      }
     },
     username: { type: DataTypes.STRING, allowNull: false, unique: 'ce nom d\'utilisateur est déja utilisée' },
     password: {
@@ -86,7 +86,7 @@ User.init(
 User.hasMany(Post, {
   sourceKey: 'id',
   foreignKey: 'ownerId',
-  as: 'posts' // this determines the name in `associations`!
+  as: 'posts'
 });
 
 Post.belongsTo(User,{foreignKey:'ownerId',targetKey:'id'})

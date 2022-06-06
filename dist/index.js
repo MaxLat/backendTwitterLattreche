@@ -5,12 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const application_1 = require("./application");
 const user_model_1 = __importDefault(require("./src/models/user.model"));
-//import { middleware } from "./middleware";
 const router_module_1 = require("./src/routes/router.module");
 const dbConnection_1 = require("./src/services/dbConnection");
 const post_model_1 = __importDefault(require("./src/models/post.model"));
 require('dotenv').config();
-const port = process.env.PORT ? +process.env.PORT : 8080;
+const port = process.env.PORT ? +process.env.PORT : 3000;
 async function dbStart() {
     try {
         await dbConnection_1.sequelize.authenticate();
@@ -25,15 +24,7 @@ async function dbStart() {
 }
 async function startApp() {
     await dbStart();
-    /**
-     * Configure App instance
-     */
-    const app = new application_1.App(port, [router_module_1.routerTemplate] //* Add your express router objects here
-    //middleware,
-    );
+    const app = new application_1.App(port, [router_module_1.routerTemplate]);
     app.listen();
 }
-/**
- * Launch!
- */
 startApp();

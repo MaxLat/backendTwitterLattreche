@@ -1,13 +1,10 @@
-//express imports
 import express = require("express");
 export const routerTemplate = express.Router();
 import passport = require("passport");
 import { NextFunction, Response } from "express";
-//controllers
 
 import {
   postController,
-  testController,
   userController,
 } from "../controllers/controllers.module";
 import { AuthService } from "../services/auth";
@@ -15,27 +12,22 @@ const multer = require("multer");
 
 function passportCb(req: any, res: Response, next: NextFunction) {
   return (error: any, user: any) => {
-    //Wrap errors in not authenticated error
     if (error) {
       return res
         .status(500)
         .json({ error: "Une erreur est survenue lors du login" });
     }
 
-    //No user found?
     if (!user) {
       return res
         .status(500)
         .json({ error: "Utilisateur ou mot de passe incorrect" });
     }
 
-    //Set user in request
     req.user = user;
     next();
   };
 }
-
-// Multer File upload settings
 
 const storage = multer.diskStorage({
   destination: (req : Request, file : any, cb : Function) => {
@@ -48,7 +40,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// Multer Mime Type Validation
 var upload = multer({
   storage: storage,
   limits: {
@@ -135,6 +126,7 @@ routerTemplate.delete(
 routerTemplate.put(
   "/updatepost",
   passport.authenticate("jwt", { session: false }),
+  upload.single('img'),
   (req, res) => {
     postController.updatePost(req, res);
   }

@@ -1,13 +1,11 @@
 import { App } from "./application";
 import User from "./src/models/user.model";
-//import { middleware } from "./middleware";
 import { routerTemplate } from "./src/routes/router.module";
 import { sequelize } from "./src/services/dbConnection";
-import * as dotenv from "dotenv";
 import Post from "./src/models/post.model";
 require('dotenv').config();
 
-const port: number = process.env.PORT ? +process.env.PORT : 8080;
+const port: number = process.env.PORT ? +process.env.PORT : 3000;
 
 async function dbStart() {
   try {
@@ -23,19 +21,13 @@ async function dbStart() {
 
 async function startApp() {
   await dbStart();
-  /**
-   * Configure App instance
-   */
+
   const app = new App(
     port,
-    [routerTemplate] //* Add your express router objects here
-    //middleware,
+    [routerTemplate]
   );
 
   app.listen();
 }
 
-/**
- * Launch!
- */
 startApp();

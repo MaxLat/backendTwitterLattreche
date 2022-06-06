@@ -7,7 +7,6 @@ const sequelize_1 = require("sequelize");
 const dbConnection_1 = require("../services/dbConnection");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const post_model_1 = __importDefault(require("./post.model"));
-// order of InferAttributes & InferCreationAttributes is important.
 class User extends sequelize_1.Model {
 }
 User.init({
@@ -19,7 +18,10 @@ User.init({
     email: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
-        unique: "cette email est déja utilisée"
+        unique: "cette email est déja utilisée",
+        validate: {
+            isEmail: { msg: 'Veuillez rentrer une adresse email valide' }
+        }
     },
     username: { type: sequelize_1.DataTypes.STRING, allowNull: false, unique: 'ce nom d\'utilisateur est déja utilisée' },
     password: {
@@ -45,7 +47,7 @@ User.init({
 User.hasMany(post_model_1.default, {
     sourceKey: 'id',
     foreignKey: 'ownerId',
-    as: 'posts' // this determines the name in `associations`!
+    as: 'posts'
 });
 post_model_1.default.belongsTo(User, { foreignKey: 'ownerId', targetKey: 'id' });
 exports.default = User;
