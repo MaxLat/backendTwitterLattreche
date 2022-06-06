@@ -2,7 +2,6 @@ import { Application } from "express";
 import express = require("express");
 var cors = require('cors');
 
-
 export class App {
     public app: Application;
 
@@ -10,22 +9,27 @@ export class App {
     constructor(
         private port: number,
         routes: Array<express.Router>,
+        middleware = []
     ) {
         this.app = express();
-        this.middleware();
-        this.routes(routes);
+        this.middleware(middleware);
         this.assets();
+        this.routes(routes);
     }
 
 
-    private middleware() {
+    private middleware(mware: any[]) {
         this.app.use(express.json());
         this.app.use(express.urlencoded());
         this.app.use(cors());
-        
     }
 
-    private routes(routes: Array<express.Router>) : void {
+    public addMiddleWare(middleWare: any) {
+        this.app.use(middleWare);
+    }
+
+
+    private routes(routes: Array<express.Router>) {
 
         //Route pour avoir accès a angular 
         this.app.get('*', (req ,res) => {
@@ -43,7 +47,9 @@ export class App {
         this.app.use('/', express.static('/var/www/html/public/angular/'));
     }
 
-   
+    /**
+     * Start the Express app
+     */
     public listen() {
         this.app.listen(this.port, () => {
             console.log("APP LISTENING ON PORT:", this.port);
