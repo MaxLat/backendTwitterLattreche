@@ -9,25 +9,19 @@ export class App {
     constructor(
         private port: number,
         routes: Array<express.Router>,
-        middleware = []
     ) {
         this.app = express();
-        this.middleware(middleware);
+        this.middleware();
         this.assets();
         this.routes(routes);
     }
 
 
-    private middleware(mware: any[]) {
+    private middleware() {
         this.app.use(express.json());
         this.app.use(express.urlencoded());
         this.app.use(cors());
     }
-
-    public addMiddleWare(middleWare: any) {
-        this.app.use(middleWare);
-    }
-
 
     private routes(routes: Array<express.Router>) {
 
